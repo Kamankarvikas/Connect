@@ -4,6 +4,7 @@ export enum Tab {
   TEMPLATE_CREATION = 'Template Creation',
   CAMPAIGN = 'Campaign',
   AUDIENCE = 'Audience',
+  INBOX = 'Inbox',
   CREATE_CAMPAIGN = 'Create Campaign',
   CAMPAIGN_DETAIL = 'Campaign Detail',
   CAMPAIGN_REPORT = 'Campaign Report',
@@ -89,4 +90,23 @@ export interface ConnectedAccount {
     name: string;
     identifier: string;
     status: 'Active' | 'Pending' | 'Disconnected';
+}
+
+export interface Message {
+  id: string;
+  conversationId: number;
+  sender: 'Admin' | 'Farmer';
+  text: string;
+  timestamp: string;
+  status: 'sent' | 'delivered' | 'read';
+}
+
+export interface Conversation {
+  id: number;
+  farmerName: string;
+  farmerAvatar: string;
+  lastMessage: string;
+  lastMessageTimestamp: string;
+  unreadCount: number;
+  associatedCampaignId?: number;
 }

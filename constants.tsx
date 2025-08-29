@@ -1,6 +1,6 @@
 import React from 'react';
-import { Tab, Campaign, Template, Transaction, ConnectedAccount, Audience, CampaignRecipientLog } from './types';
-import { DashboardIcon, ChannelIcon, TemplateIcon, CampaignIcon, WalletIcon, SettingsIcon, OtherIcon, UsersGroupIcon } from './components/Icons';
+import { Tab, Campaign, Template, Transaction, ConnectedAccount, Audience, CampaignRecipientLog, Conversation, Message } from './types';
+import { DashboardIcon, ChannelIcon, TemplateIcon, CampaignIcon, WalletIcon, SettingsIcon, OtherIcon, UsersGroupIcon, InboxIcon } from './components/Icons';
 
 export const TABS = Tab;
 
@@ -10,6 +10,7 @@ export const NAV_ITEMS = [
   { id: TABS.TEMPLATE_CREATION, label: TABS.TEMPLATE_CREATION, icon: <TemplateIcon /> },
   { id: TABS.CAMPAIGN, label: TABS.CAMPAIGN, icon: <CampaignIcon /> },
   { id: TABS.AUDIENCE, label: TABS.AUDIENCE, icon: <UsersGroupIcon /> },
+  { id: TABS.INBOX, label: TABS.INBOX, icon: <InboxIcon /> },
   { id: TABS.WALLET, label: TABS.WALLET, icon: <WalletIcon /> },
   { id: TABS.OTHER, label: TABS.OTHER, icon: <OtherIcon /> },
 ];
@@ -209,6 +210,62 @@ export const MOCK_SMS_ACCOUNTS: ConnectedAccount[] = [
 
 export const MOCK_NETWORK_ACCOUNTS: ConnectedAccount[] = [
     { id: 'app_1', name: 'AgroBEET Network', identifier: 'com.agrobeet.app', status: 'Active' },
+];
+
+export const MOCK_CONVERSATIONS: Conversation[] = [
+    { 
+        id: 1, 
+        farmerName: 'Ranjit Singh', 
+        farmerAvatar: 'https://i.pravatar.cc/48?u=farmer1',
+        lastMessage: 'Great, I will check it out. Thank you!',
+        lastMessageTimestamp: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
+        unreadCount: 0,
+        associatedCampaignId: 1,
+    },
+    { 
+        id: 2, 
+        farmerName: 'Priya Sharma', 
+        farmerAvatar: 'https://i.pravatar.cc/48?u=farmer2',
+        lastMessage: 'Yes, I am interested. Can you tell me more about the financing options available?',
+        lastMessageTimestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+        unreadCount: 2,
+        associatedCampaignId: 5,
+    },
+    { 
+        id: 3, 
+        farmerName: 'Amit Kumar', 
+        farmerAvatar: 'https://i.pravatar.cc/48?u=farmer3',
+        lastMessage: 'Okay, thanks.',
+        lastMessageTimestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+        unreadCount: 0,
+    },
+    { 
+        id: 4, 
+        farmerName: 'Sunita Devi', 
+        farmerAvatar: 'https://i.pravatar.cc/48?u=farmer4',
+        lastMessage: 'Is the new equipment demo still available in my area?',
+        lastMessageTimestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        unreadCount: 0,
+        associatedCampaignId: 3,
+    },
+];
+
+export const MOCK_MESSAGES: Message[] = [
+    // Convo 1
+    { id: 'msg_1_1', conversationId: 1, sender: 'Farmer', text: 'I received a message about the Spring Planting Sale. Is the offer still valid?', timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString(), status: 'read' },
+    { id: 'msg_1_2', conversationId: 1, sender: 'Admin', text: 'Hello Ranjit! Yes, the offer is valid for another 48 hours. You can find all the details on our website.', timestamp: new Date(Date.now() - 3 * 60 * 1000).toISOString(), status: 'delivered' },
+    { id: 'msg_1_3', conversationId: 1, sender: 'Farmer', text: 'Great, I will check it out. Thank you!', timestamp: new Date(Date.now() - 2 * 60 * 1000).toISOString(), status: 'read' },
+    // Convo 2
+    { id: 'msg_2_1', conversationId: 2, sender: 'Admin', text: 'Hi Priya, just following up on our Fertilizer Discount campaign. Let me know if you have any questions.', timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(), status: 'read' },
+    { id: 'msg_2_2', conversationId: 2, sender: 'Farmer', text: 'Hello, thank you for reaching out.', timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(), status: 'read' },
+    { id: 'msg_2_3', conversationId: 2, sender: 'Farmer', text: 'Yes, I am interested. Can you tell me more about the financing options available?', timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), status: 'delivered' },
+    // Convo 3
+    { id: 'msg_3_1', conversationId: 3, sender: 'Farmer', text: 'How do I check my order status?', timestamp: new Date(Date.now() - 1.5 * 24 * 60 * 60 * 1000).toISOString(), status: 'read' },
+    { id: 'msg_3_2', conversationId: 3, sender: 'Admin', text: 'Hi Amit, you can track your order status from the "My Orders" section in the AgroBEET Network app. Let me know if you need help finding it.', timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000 - 10000).toISOString(), status: 'read' },
+    { id: 'msg_3_3', conversationId: 3, sender: 'Farmer', text: 'Okay, thanks.', timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), status: 'read' },
+     // Convo 4
+    { id: 'msg_4_1', conversationId: 4, sender: 'Farmer', text: 'Is the new equipment demo still available in my area?', timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), status: 'read' },
+
 ];
 
 export const MOCK_COMPANY_PROFILE = {

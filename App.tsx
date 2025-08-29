@@ -15,8 +15,9 @@ import OnboardingScreen from './components/screens/OnboardingScreen';
 import CompanyProfileScreen from './components/screens/CompanyProfileScreen';
 import CampaignDetailScreen from './components/screens/CampaignDetailScreen';
 import CampaignReportScreen from './components/screens/CampaignReportScreen';
-import { Tab, Campaign, Template, Audience } from './types';
-import { TABS, MOCK_CAMPAIGNS, MOCK_TEMPLATES, MOCK_AUDIENCES } from './constants';
+import InboxScreen from './components/screens/InboxScreen';
+import { Tab, Campaign, Template, Audience, Conversation, Message } from './types';
+import { TABS, MOCK_CAMPAIGNS, MOCK_TEMPLATES, MOCK_AUDIENCES, MOCK_CONVERSATIONS, MOCK_MESSAGES } from './constants';
 import DuplicateCampaignDialog from './components/shared/DuplicateCampaignDialog';
 import ConfirmationDialog from './components/shared/ConfirmationDialog';
 import { useToast } from './hooks/useToast';
@@ -34,6 +35,9 @@ const App: React.FC = () => {
   const [campaigns, setCampaigns] = useState<Campaign[]>(MOCK_CAMPAIGNS);
   const [templates, setTemplates] = useState<Template[]>(MOCK_TEMPLATES);
   const [audiences, setAudiences] = useState<Audience[]>(MOCK_AUDIENCES);
+  const [conversations, setConversations] = useState<Conversation[]>(MOCK_CONVERSATIONS);
+  const [messages, setMessages] = useState<Message[]>(MOCK_MESSAGES);
+
 
   // State for modals, detail views, and campaign creation flow
   const [campaignDraft, setCampaignDraft] = useState<Partial<Campaign> | null>(null);
@@ -155,6 +159,55 @@ const App: React.FC = () => {
     setActiveTab(TABS.CAMPAIGN_REPORT);
   };
 
+  const handleSendMessage = (conversationId: number, text: string) => {
+    const newMessage: Message = {
+        id: `msg_${Date.now()}`,
+        conversationId,
+        sender: 'Admin',
+        text,
+        timestamp: new Date().toISOString(),
+        status: 'sent',
+    };
+    
+    setMessages(prev => [...prev, newMessage]);
+
+    // Also update the last message in the conversation list
+    setConversations(prev => prev.map(convo => {
+        if (convo.id === conversationId) {
+            return {
+                ...convo,
+                lastMessage: text,
+                lastMessageTimestamp: new Date().toISOString(),
+            };
+        }
+        return convo;
+    }));
+
+    // Simulate a farmer's reply after a short delay for demo purposes
+    setTimeout(() => {
+        const farmerReply: Message = {
+            id: `msg_${Date.now() + 1}`,
+            conversationId,
+            sender: 'Farmer',
+            text: "Thanks for the quick response! I'll take a look.",
+            timestamp: new Date().toISOString(),
+            status: 'delivered'
+        };
+        setMessages(prev => [...prev, farmerReply]);
+         setConversations(prev => prev.map(convo => {
+            if (convo.id === conversationId) {
+                return {
+                    ...convo,
+                    lastMessage: farmerReply.text,
+                    lastMessageTimestamp: new Date().toISOString(),
+                    unreadCount: (convo.unreadCount || 0) + 1,
+                };
+            }
+            return convo;
+        }));
+    }, 2500);
+};
+
   const handleLogin = () => {
     setIsOnboardingComplete(false); 
     setCurrentView('dashboard');
@@ -205,6 +258,13 @@ const App: React.FC = () => {
                     audiences={audiences}
                     setAudiences={setAudiences}
                     onSave={handleAddAudience}
+                />;
+      case TABS.INBOX:
+        return <InboxScreen
+                    conversations={conversations}
+                    setConversations={setConversations}
+                    messages={messages}
+                    onSendMessage={handleSendMessage}
                 />;
       case TABS.CREATE_CAMPAIGN:
         if (campaignDraft === null) {
